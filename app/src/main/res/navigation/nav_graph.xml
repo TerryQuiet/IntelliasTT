@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/wordSearchFragment">
+
+    <fragment
+        android:id="@+id/wordSearchFragment"
+        android:name="tk.quietdev.quietdictionary.ui.search.WordSearchFragment"
+        android:label="lookup"
+        tools:layout="@layout/word_search_fragment">
+        <action
+            android:id="@+id/action_loginFragment_to_registrationFragment"
+            app:destination="@id/wordDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/wordDetailsFragment"
+        tools:layout="@layout/word_details_fragment"
+        android:name="tk.quietdev.quietdictionary.ui.details.WordDetailsFragment"
+        android:label="Details">
+        <action
+            android:id="@+id/reg_to_log"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@+id/loginFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+</navigation>
