@@ -1,16 +1,17 @@
 package tk.quietdev.quietdictionary.data.remote.models
 
 data class DictionaryResponse(
-    val meanings: List<Meaning?>,
+    val meanings: List<MeaningRemote>,
     val phonetic: String?,
     val word: String
 )
 
-data class Meaning(
-    val definitions: List<Definition>,
+data class MeaningRemote(
+    val definitions: List<DefinitionRemote>,
     val partOfSpeech: String
 )
 
-data class Definition(
+data class DefinitionRemote(
     val definition: String
 )
+

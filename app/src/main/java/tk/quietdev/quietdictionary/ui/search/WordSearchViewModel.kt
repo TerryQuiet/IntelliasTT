@@ -1,21 +1,24 @@
 package tk.quietdev.quietdictionary.ui.search
 
-import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import tk.quietdev.quietdictionary.data.remote.DictionaryApi
+import tk.quietdev.core.domain.models.WordModel
+import tk.quietdev.core.usecase.GetWordUseCase
+import tk.quietdev.level1.common.Resource
 
 class WordSearchViewModel(
-    private val api: DictionaryApi
+    private val getWordUseCase: GetWordUseCase
 ) : ViewModel() {
 
+    private val _currentWord = MutableLiveData<Resource<WordModel>>(Resource.Loading(null))
+    val currentWord: LiveData<Resource<WordModel>> get() = _currentWord
+
     fun getHello(word :String) {
-        Log.wtf("TAG", "getHello 1", )
         viewModelScope.launch {
-            Log.wtf("TAG", "getHello 2", )
-            val response = api.getHello(word)
-            Log.wtf("TAG", "getHello: ${response.isSuccessful}", )
+           _currentWord.value = getWordUseCase(word)!! // no idea why it's swearing.
         }
     }
 

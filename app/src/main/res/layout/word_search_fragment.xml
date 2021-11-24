@@ -37,12 +37,17 @@
 
 
     <Button
-        android:id="@+id/find"
+        android:id="@+id/btnSearch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Outlined button"
         style="?attr/materialButtonOutlinedStyle"
         />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvResponse"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 
 

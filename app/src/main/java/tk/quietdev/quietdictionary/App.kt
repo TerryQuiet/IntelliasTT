@@ -4,7 +4,9 @@ import android.app.Application
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import tk.quietdev.quietdictionary.di.appModule
+import tk.quietdev.quietdictionary.di.dataModule
 import tk.quietdev.quietdictionary.di.networkModule
+import tk.quietdev.quietdictionary.di.useCaseModule
 
 class App : Application() {
 
@@ -12,7 +14,7 @@ class App : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@App)
-            modules(appModule, networkModule)
+            modules(appModule, networkModule, dataModule, useCaseModule)
         }
     }
 }

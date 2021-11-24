@@ -14,7 +14,7 @@ val networkModule = module {
     factory { providesMoshi() }
     factory { providesHttpLoggingInterceptor() }
     factory { provideOkHttpClient(get()) }
-    factory { provideForecastApi(get()) }
+    factory { provideDictionaryApi(get()) }
     single { provideRetrofit(get(), get()) }
 }
 
@@ -34,5 +34,5 @@ fun provideOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor,): OkHttp
     return OkHttpClient.Builder().addInterceptor(httpLoggingInterceptor).build()
 }
 
-fun provideForecastApi(retrofit: Retrofit): DictionaryApi =
+fun provideDictionaryApi(retrofit: Retrofit): DictionaryApi =
     retrofit.create(DictionaryApi::class.java)
