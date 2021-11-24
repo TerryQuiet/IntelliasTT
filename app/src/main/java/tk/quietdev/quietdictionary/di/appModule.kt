@@ -7,7 +7,12 @@ import tk.quietdev.quietdictionary.ui.search.WordSearchViewModel
 
 val appModule = module {
 
-    viewModel { WordDetailsViewModel() }
-    viewModel { WordSearchViewModel(get()) }
+    viewModel { parameters ->
+        WordDetailsViewModel(
+            word = parameters.get(),
+            getWordUseCase = get()
+        )
+    }
+    viewModel { WordSearchViewModel(get(), get()) }
 
 }
