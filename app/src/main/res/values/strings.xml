@@ -2,4 +2,6 @@
     <string name="app_name">QuietDictionary</string>
     <string name="find">Find</string>
     <string name="history">History:</string>
+    <string name="search">Search</string>
+    <string name="phonetic_not_found">phonetic not found</string>
 </resources>

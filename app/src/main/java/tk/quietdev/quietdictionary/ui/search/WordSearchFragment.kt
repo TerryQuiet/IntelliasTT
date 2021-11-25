@@ -1,7 +1,7 @@
 package tk.quietdev.quietdictionary.ui.search
 
 import android.graphics.Color
-import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
@@ -13,6 +13,7 @@ import tk.quietdev.level1.common.Resource
 import tk.quietdev.quietdictionary.R
 import tk.quietdev.quietdictionary.base.BaseFragment
 import tk.quietdev.quietdictionary.databinding.WordSearchFragmentBinding
+import tk.quietdev.quietdictionary.util.hideSoftKeyboard
 
 class WordSearchFragment :
     BaseFragment<WordSearchFragmentBinding>(WordSearchFragmentBinding::inflate) {
@@ -23,6 +24,20 @@ class WordSearchFragment :
         binding.btnSearch.setOnClickListener {
             viewModel.getHello(binding.etSearch.text.toString())
         }
+
+        binding.etSearch.setOnKeyListener(object : View.OnKeyListener {
+            override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
+                if (event.action == KeyEvent.ACTION_DOWN &&
+                    keyCode == KeyEvent.KEYCODE_ENTER
+                ) {
+                    requireActivity().hideSoftKeyboard()
+                    viewModel.getHello(binding.etSearch.text.toString())
+                    return true
+                }
+                return false
+            }
+        })
+
     }
 
     override fun setObservers() {
@@ -38,7 +53,6 @@ class WordSearchFragment :
                 else -> { /*loading?*/ }
             }
         }
-
         viewModel.cachedWords.observe(viewLifecycleOwner) {
                 drawCachedWords(it)
         }
@@ -78,11 +92,6 @@ class WordSearchFragment :
             )
         )
         viewModel.clear()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        Log.wtf("TAG", "onDestroyView: ")
     }
 
     private fun showErrorSnackbar(message: String) {

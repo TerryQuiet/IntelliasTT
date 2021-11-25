@@ -6,6 +6,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
+import tk.quietdev.quietdictionary.R
 import tk.quietdev.quietdictionary.base.BaseFragment
 import tk.quietdev.quietdictionary.databinding.WordDetailsFragmentBinding
 import tk.quietdev.quietdictionary.ui.ToolbarConfigure
@@ -33,7 +34,7 @@ class WordDetailsFragment : BaseFragment<WordDetailsFragmentBinding>(WordDetails
     override fun setObservers() {
         super.setObservers()
         viewModel.currentWord.observe(viewLifecycleOwner) {
-            binding.tvPhonetic.text = "[${it.phonetic}]"
+            binding.tvPhonetic.text = "[${it.phonetic ?: getString(R.string.phonetic_not_found)}]"
             wordMeaningAdapter.submitList(it.meanings)
         }
     }

@@ -8,6 +8,7 @@ import tk.quietdev.level1.common.Resource
 import tk.quietdev.quietdictionary.data.remote.DictionaryApi
 import tk.quietdev.quietdictionary.data.remote.models.ErrorResponse
 import tk.quietdev.quietdictionary.data.remote.models.toDomain
+import tk.quietdev.quietdictionary.util.Constants
 
 class ApiDataSource(
     private val api: DictionaryApi
@@ -18,7 +19,7 @@ class ApiDataSource(
             Resource.Success(response.body()!!.first().toDomain())
         } else  {
             val errorMessage = errorResponseMapper().fromJson(response.errorBody()?.string())?.message
-            Resource.Error(errorMessage ?: "Fail")
+            Resource.Error(errorMessage ?: Constants.UNEXPECTED_ERROR)
         }
     }
 }
