@@ -1,44 +1,22 @@
 package tk.quietdev.quietdictionary.data.datasource.local
 
+
 import androidx.room.withTransaction
+import kotlinx.coroutines.flow.map
 import tk.quietdev.core.domain.models.WordModel
 import tk.quietdev.quietdictionary.data.db.WordDb
-import tk.quietdev.quietdictionary.data.db.models.DefinitionEntity
-import tk.quietdev.quietdictionary.data.db.models.MeaningDefinitionCrossRef
-import tk.quietdev.quietdictionary.data.db.models.MeaningEntity
-import tk.quietdev.quietdictionary.data.db.models.WordEntity
-
-class RoomDataSource(private val dao: WordDb) {
-
-    suspend fun test() {
-
-        /* val test =  WordWithMeanings(
-                word = WordEntity(
-                    word = "word",
-                    phonetic = "phonetic"
-                ),
-                meanings = listOf(
-                    MeaningWithDefinition(
-                        MeaningEntity(
-                            meanId = "wordmean",
-                            wordCreatorId = "word",
-                            partOfSpeech = "wtf"
-                        ),
-                        definitions = listOf(
-                            DefinitionEntity(
-                                defId = 0,
-                                definition = "WHATEWER"
-                            )
-                        )
-                    )
-                )
-            )*/
-    }
-
-    fun flowCachedWords() = dao.wordDao.getAllCachedWords()
+import tk.quietdev.quietdictionary.data.db.models.*
 
 
-    suspend fun cacheWord(wordModel: WordModel) {
+class RoomDataSource(private val dao: WordDb) : LocalDataSource{
+
+    override suspend fun getWordWithContent(word: String) : WordModel = dao.wordDao.getWordWithContent(word).toDomain()
+
+    override fun flowCachedWords() = dao.wordDao.getAllCachedWords().map { it.map { it.word } }
+
+    /* looks awful, have to map every single nested object to room entity while adding Ids
+    for relations */
+    override suspend fun cacheWord(wordModel: WordModel) {
         dao.withTransaction {
             dao.wordDao.insert(
                 WordEntity(
@@ -46,7 +24,7 @@ class RoomDataSource(private val dao: WordDb) {
                     phonetic = wordModel.phonetic
                 )
             )
-            wordModel.meanings.forEach {  meaning->
+            wordModel.meanings.forEach { meaning ->
                 MeaningEntity(
                     meanId = wordModel.word + meaning.partOfSpeech,
                     wordCreatorId = wordModel.word,

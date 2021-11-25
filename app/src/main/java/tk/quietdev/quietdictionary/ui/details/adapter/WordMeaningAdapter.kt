@@ -25,7 +25,7 @@ class WordMeaningHolder(private val binding: ItemWordMeaningBinding) :
     fun bind(meaning: Meaning) {
         binding.apply {
             tvPartOfSpeech.text = meaning.partOfSpeech
-            tvDefinition.text = meaning.definitions.reduce { acc, s -> " $acc \n \n $s" }
+            tvDefinition.text = meaning.definitions.reduce { acc, s -> " $acc\n\n $s" }
         }
     }
 }

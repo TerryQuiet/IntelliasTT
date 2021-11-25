@@ -19,13 +19,13 @@ interface WordDao {
     suspend fun insert(crossRef: MeaningDefinitionCrossRef)
 
     @Transaction
-    @Query("SELECT * from WordEntity WHERE word = :word")
+    @Query("SELECT * from WordEntity WHERE word = :word COLLATE NOCASE")
     suspend fun getWordWithContent(word: String): WordWithMeanings
 
     @Query("SELECT * from WordEntity WHERE word = :word")
     suspend fun getWord(word: String): WordEntity
 
-    @Query("SELECT * FROM WordEntity")
+    @Query("SELECT * FROM WordEntity ORDER by word")
     fun getAllCachedWords(): Flow<List<WordEntity>>
 
 }

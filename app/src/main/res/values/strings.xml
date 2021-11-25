@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">QuietDictionary</string>
+    <string name="find">Find</string>
+    <string name="history">History:</string>
 </resources>
