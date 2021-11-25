@@ -24,6 +24,7 @@ class WordSearchViewModel(
     val cachedWords = flowCachedWordsUseCase.invoke().asLiveData()
 
     fun getWord(word: String) {
+        if (word.isEmpty()) return
         viewModelScope.launch {
             getWordUseCase(word).let {
                 when (it) {
