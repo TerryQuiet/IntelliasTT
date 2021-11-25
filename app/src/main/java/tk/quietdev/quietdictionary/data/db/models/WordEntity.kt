@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 @Entity
 data class WordEntity(
     @PrimaryKey(autoGenerate = false) val word: String,
+    val accessAt: Long,
     val phonetic: String?,
 )
 

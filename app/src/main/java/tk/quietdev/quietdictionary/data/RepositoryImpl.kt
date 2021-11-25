@@ -5,6 +5,7 @@ import tk.quietdev.core.domain.models.WordModel
 import tk.quietdev.level1.common.Resource
 import tk.quietdev.quietdictionary.data.datasource.local.LocalDataSource
 import tk.quietdev.quietdictionary.data.datasource.remote.RemoteDataSource
+import tk.quietdev.quietdictionary.util.Constants
 
 class RepositoryImpl(
     private val remoteDataSource: RemoteDataSource,
@@ -23,10 +24,9 @@ class RepositoryImpl(
                     }
                 }
             } catch (e: Exception) {
-                Resource.Error(e.message ?: "")
+                Resource.Error(e.message ?: Constants.UNEXPECTED_ERROR)
             }
         }
-
     }
 
     override fun flowCachedWords() = roomDataSource.flowCachedWords()

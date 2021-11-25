@@ -8,9 +8,18 @@ import tk.quietdev.quietdictionary.data.db.WordDb
 import tk.quietdev.quietdictionary.data.db.models.*
 
 
-class RoomDataSource(private val dao: WordDb) : LocalDataSource{
+class RoomDataSource(private val dao: WordDb) : LocalDataSource {
 
-    override suspend fun getWordWithContent(word: String) : WordModel = dao.wordDao.getWordWithContent(word).toDomain()
+    override suspend fun getWordWithContent(word: String): WordModel {
+        return try {
+            dao.withTransaction {
+                dao.wordDao.updateWordAccessTime(word, System.currentTimeMillis())
+                dao.wordDao.getWordWithContent(word).toDomain()
+            }
+        } catch (e: Exception) {
+            throw e
+        }
+    }
 
     override fun flowCachedWords() = dao.wordDao.getAllCachedWords().map { it.map { it.word } }
 
@@ -21,7 +30,8 @@ class RoomDataSource(private val dao: WordDb) : LocalDataSource{
             dao.wordDao.insert(
                 WordEntity(
                     word = wordModel.word,
-                    phonetic = wordModel.phonetic
+                    phonetic = wordModel.phonetic,
+                    accessAt = System.currentTimeMillis()
                 )
             )
             wordModel.meanings.forEach { meaning ->

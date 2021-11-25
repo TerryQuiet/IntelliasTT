@@ -25,7 +25,10 @@ interface WordDao {
     @Query("SELECT * from WordEntity WHERE word = :word")
     suspend fun getWord(word: String): WordEntity
 
-    @Query("SELECT * FROM WordEntity ORDER by word")
+    @Query("UPDATE WordEntity SET accessAt=:time WHERE word = :word")
+    suspend fun updateWordAccessTime(word: String, time: Long)
+
+    @Query("SELECT * FROM WordEntity ORDER by accessAt DESC")
     fun getAllCachedWords(): Flow<List<WordEntity>>
 
 }
