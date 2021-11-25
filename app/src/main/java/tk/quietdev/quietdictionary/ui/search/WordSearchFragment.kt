@@ -6,10 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.children
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import tk.quietdev.level1.common.Resource
 import tk.quietdev.quietdictionary.R
 import tk.quietdev.quietdictionary.base.BaseFragment
 import tk.quietdev.quietdictionary.databinding.WordSearchFragmentBinding
@@ -22,7 +26,7 @@ class WordSearchFragment :
     override fun setListeners() {
         super.setListeners()
         binding.btnSearch.setOnClickListener {
-            viewModel.getHello(binding.etSearch.text.toString())
+            viewModel.getWord(binding.etSearch.text.toString())
         }
 
         binding.etSearch.setOnKeyListener(object : View.OnKeyListener {
@@ -31,7 +35,7 @@ class WordSearchFragment :
                     keyCode == KeyEvent.KEYCODE_ENTER
                 ) {
                     requireActivity().hideSoftKeyboard()
-                    viewModel.getHello(binding.etSearch.text.toString())
+                    viewModel.getWord(binding.etSearch.text.toString())
                     return true
                 }
                 return false
@@ -42,20 +46,28 @@ class WordSearchFragment :
 
     override fun setObservers() {
         super.setObservers()
-        viewModel.currentWord.observe(viewLifecycleOwner) {
-            when (it) {
-                is Resource.Success -> {
-                    openWordDetails(it.data!!.word)
-                }
-                is Resource.Error -> {
-                    it.message?.let { showErrorSnackbar(it) }
-                }
-                else -> { /*loading?*/ }
-            }
-        }
+
         viewModel.cachedWords.observe(viewLifecycleOwner) {
-                drawCachedWords(it)
+            drawCachedWords(it)
         }
+
+        viewModel.eventsFlow
+            .flowWithLifecycle(
+                lifecycle = viewLifecycleOwner.lifecycle,
+                minActiveState = Lifecycle.State.STARTED
+            )
+            .onEach {
+                when (it) {
+                    is WordSearchViewModel.Event.NavigateToDetails -> {
+                        openWordDetails(it.text)
+                    }
+                    is WordSearchViewModel.Event.ShowSnackBar -> {
+                        showErrorSnackbar(it.text)
+                    }
+                }
+            }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
+
     }
 
     private fun drawCachedWords(it: List<String>) {
@@ -91,7 +103,6 @@ class WordSearchFragment :
                 word
             )
         )
-        viewModel.clear()
     }
 
     private fun showErrorSnackbar(message: String) {

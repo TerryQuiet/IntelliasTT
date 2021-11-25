@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity(), ToolbarConfigure {
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         toolbarSetup()
+
     }
 
     override fun changeToolBarTitle(text:String) {
